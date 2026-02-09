@@ -96,10 +96,10 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpGet]
         [Authorize(Roles = "0")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute(Name = "id")] int userId)
         {
             var client = CreateAuthorizedClient();
-            var resp = await client.GetAsync($"api/users/{id}");
+            var resp = await client.GetAsync($"api/users/{userId}");
             if (!resp.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
@@ -113,13 +113,13 @@ namespace XcelerateLinks.Mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "0")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromRoute(Name = "id")] int userId)
         {
             var client = CreateAuthorizedClient();
-            var resp = await client.DeleteAsync($"api/users/{id}");
+            var resp = await client.DeleteAsync($"api/users/{userId}");
             if (!resp.IsSuccessStatusCode)
             {
-                return RedirectToAction(nameof(Delete), new { id });
+                return RedirectToAction(nameof(Delete), new { id = userId });
             }
 
             return RedirectToAction(nameof(Index));
@@ -149,7 +149,7 @@ namespace XcelerateLinks.Mvc.Controllers
             var resp = await client.GetAsync(url);
             if (!resp.IsSuccessStatusCode)
             {
-                model.ErrorMessage = await SafeReadStringAsync(resp) ?? "Unable to load users with the selected filters.";
+                model.ErrorMessage = await SafeReadStringAsync(resp) ?? "Não foi possível carregar os utilizadores com os filtros selecionados.";
                 model.Users = Array.Empty<User>();
                 return model;
             }

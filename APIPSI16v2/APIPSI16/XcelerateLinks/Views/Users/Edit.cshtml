@@ -1,6 +1,8 @@
 @model User
 @{
     ViewData["Title"] = "Editar utilizador";
+    var adminRole = "0";
+    var isAdmin = User.IsInRole(adminRole);
 }
 
 <h2 class="mb-3">Editar utilizador</h2>
@@ -17,7 +19,7 @@
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    @if (User.IsInRole("0"))
+    @if (isAdmin)
     {
         <div class="mb-3">
             <label asp-for="Email" class="form-label">Email</label>
@@ -60,7 +62,7 @@
         <span asp-validation-for="DoB" class="text-danger"></span>
     </div>
 
-    @if (User.IsInRole("0"))
+    @if (isAdmin)
     {
         <div class="mb-3">
             <label asp-for="Role" class="form-label">Role</label>

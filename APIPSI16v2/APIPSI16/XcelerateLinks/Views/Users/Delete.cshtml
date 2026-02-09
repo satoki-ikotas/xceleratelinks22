@@ -14,9 +14,8 @@
     <dd class="col-sm-9">@Model.Email</dd>
 </dl>
 
-<form asp-action="DeleteConfirmed" method="post">
+<form asp-action="DeleteConfirmed" asp-route-id="@Model.UserId" method="post">
     @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="UserId" />
     <button type="submit" class="btn btn-danger">Eliminar</button>
     <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
 </form>
