@@ -1,0 +1,22 @@
+@model User
+@{
+    ViewData["Title"] = "Eliminar utilizador";
+}
+
+<h2 class="mb-3">Eliminar utilizador</h2>
+
+<p>Tem a certeza que deseja eliminar este utilizador?</p>
+
+<dl class="row">
+    <dt class="col-sm-3">Nome</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.Email</dd>
+</dl>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="UserId" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+</form>

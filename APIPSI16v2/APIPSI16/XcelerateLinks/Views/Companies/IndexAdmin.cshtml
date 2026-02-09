@@ -1,16 +1,18 @@
 @model IEnumerable<Company>
 @{
-    ViewData["Title"] = "Empresas";
+    ViewData["Title"] = "Empresas (Admin)";
 }
 
-<h2 class="mb-3">Empresas</h2>
+<h2 class="mb-3">Empresas (Admin)</h2>
 
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-warning">@ViewBag.Error</div>
 }
 
-<p class="text-muted">Veja as empresas disponíveis e as oportunidades associadas.</p>
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">Nova empresa</a>
+</div>
 
 <table class="table table-striped">
     <thead>
@@ -18,7 +20,7 @@
             <th>Nome</th>
             <th>Indústria</th>
             <th>Localização</th>
-            <th class="text-end">Ações</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -30,6 +32,8 @@
             <td>@(item.Location ?? "-")</td>
             <td class="text-end">
                 <a asp-action="Details" asp-route-id="@item.CompanyId" class="btn btn-sm btn-outline-secondary">Detalhes</a>
+                <a asp-action="Edit" asp-route-id="@item.CompanyId" class="btn btn-sm btn-outline-primary">Editar</a>
+                <a asp-action="Delete" asp-route-id="@item.CompanyId" class="btn btn-sm btn-outline-danger">Eliminar</a>
             </td>
         </tr>
     }

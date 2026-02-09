@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using APIPSI16.Models;
@@ -18,28 +19,45 @@ namespace XcelerateLinks.Mvc.Controllers
 
         public async Task<IActionResult> Index(int? jobPreference = null, int? nationality = null)
         {
-            var model = new UserFilterViewModel
+            if (User.IsInRole("0"))
             {
-                JobPreference = jobPreference,
-                Nationality = nationality
-            };
-
-            var client = CreateAuthorizedClient();
-            var query = new List<string>();
-            if (jobPreference.HasValue) query.Add($"jobPreference={jobPreference.Value}");
-            if (nationality.HasValue) query.Add($"nationality={nationality.Value}");
-            var url = query.Count == 0 ? "api/users" : $"api/users?{string.Join("&", query)}";
-
-            var resp = await client.GetAsync(url);
-            if (!resp.IsSuccessStatusCode)
-            {
-                model.ErrorMessage = await SafeReadStringAsync(resp) ?? "Unable to load users with the selected filters.";
-                model.Users = Array.Empty<User>();
-                return View(model);
+                var adminModel = await LoadUsersAsync(jobPreference, nationality, allowEmpty: true);
+                return View("IndexAdmin", adminModel);
             }
 
-            model.Users = await resp.Content.ReadFromJsonAsync<IEnumerable<User>>() ?? Array.Empty<User>();
-            return View(model);
+            if (User.IsInRole("2"))
+            {
+                if (!jobPreference.HasValue && !nationality.HasValue)
+                {
+                    return View(new UserFilterViewModel
+                    {
+                        JobPreference = jobPreference,
+                        Nationality = nationality,
+                        Users = Array.Empty<User>(),
+                        ErrorMessage = "Use filtros para encontrar candidatos."
+                    });
+                }
+
+                var employerModel = await LoadUsersAsync(jobPreference, nationality, allowEmpty: false);
+                return View(employerModel);
+            }
+
+            var userId = GetCurrentUserId();
+            if (!userId.HasValue)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var client = CreateAuthorizedClient();
+            var resp = await client.GetAsync($"api/users/{userId.Value}");
+            if (!resp.IsSuccessStatusCode)
+            {
+                ViewBag.Error = await SafeReadStringAsync(resp) ?? "Não foi possível carregar o perfil.";
+                return View("IndexSelf", new User());
+            }
+
+            var user = await resp.Content.ReadFromJsonAsync<User>() ?? new User();
+            return View("IndexSelf", user);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -56,15 +74,88 @@ namespace XcelerateLinks.Mvc.Controllers
             return View(user);
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
             var userId = GetCurrentUserId();
             if (!userId.HasValue)
             {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var client = CreateAuthorizedClient();
+            var resp = await client.GetAsync($"api/users/{userId.Value}");
+            if (!resp.IsSuccessStatusCode)
+            {
+                ViewBag.Error = await SafeReadStringAsync(resp) ?? "Não foi possível carregar o perfil.";
+                return View("IndexSelf", new User());
+            }
+
+            var user = await resp.Content.ReadFromJsonAsync<User>() ?? new User();
+            return View("IndexSelf", user);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "0")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var client = CreateAuthorizedClient();
+            var resp = await client.GetAsync($"api/users/{id}");
+            if (!resp.IsSuccessStatusCode)
+            {
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction(nameof(Edit), new { id = userId.Value });
+            var user = await resp.Content.ReadFromJsonAsync<User>();
+            if (user == null) return RedirectToAction(nameof(Index));
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "0")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var client = CreateAuthorizedClient();
+            var resp = await client.DeleteAsync($"api/users/{id}");
+            if (!resp.IsSuccessStatusCode)
+            {
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<UserFilterViewModel> LoadUsersAsync(int? jobPreference, int? nationality, bool allowEmpty)
+        {
+            var model = new UserFilterViewModel
+            {
+                JobPreference = jobPreference,
+                Nationality = nationality
+            };
+
+            var client = CreateAuthorizedClient();
+            var query = new List<string>();
+            if (jobPreference.HasValue) query.Add($"jobPreference={jobPreference.Value}");
+            if (nationality.HasValue) query.Add($"nationality={nationality.Value}");
+
+            if (query.Count == 0 && !allowEmpty)
+            {
+                model.Users = Array.Empty<User>();
+                model.ErrorMessage = "Use filtros para encontrar candidatos.";
+                return model;
+            }
+
+            var url = query.Count == 0 ? "api/users" : $"api/users?{string.Join("&", query)}";
+            var resp = await client.GetAsync(url);
+            if (!resp.IsSuccessStatusCode)
+            {
+                model.ErrorMessage = await SafeReadStringAsync(resp) ?? "Unable to load users with the selected filters.";
+                model.Users = Array.Empty<User>();
+                return model;
+            }
+
+            model.Users = await resp.Content.ReadFromJsonAsync<IEnumerable<User>>() ?? Array.Empty<User>();
+            return model;
         }
 
         [HttpGet]

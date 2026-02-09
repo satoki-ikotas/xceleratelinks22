@@ -28,12 +28,19 @@
         <span asp-validation-for="Application.OpportunityId" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Application.UserId" class="form-label">Utilizador (ID)</label>
-        <input asp-for="Application.UserId" class="form-control" />
-        <span asp-validation-for="Application.UserId" class="text-danger"></span>
-        <div class="form-text">Deixe vazio para usar o utilizador autenticado.</div>
-    </div>
+    @if (User.IsInRole("0"))
+    {
+        <div class="mb-3">
+            <label asp-for="Application.UserId" class="form-label">Utilizador (ID)</label>
+            <input asp-for="Application.UserId" class="form-control" />
+            <span asp-validation-for="Application.UserId" class="text-danger"></span>
+            <div class="form-text">Deixe vazio para usar o utilizador autenticado.</div>
+        </div>
+    }
+    else
+    {
+        <input type="hidden" asp-for="Application.UserId" />
+    }
 
     <button type="submit" class="btn btn-primary">Guardar</button>
     <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>

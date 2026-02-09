@@ -41,7 +41,14 @@
                     <a class="btn btn-ghost" href="/Applications">Candidaturas</a>
                     <a class="btn btn-ghost" href="/Companies">Empresas</a>
                     <a class="btn btn-ghost" href="/Chats">Conversas</a>
-                    <a class="btn btn-ghost" href="/Users">Utilizadores</a>
+                    @if (User.IsInRole("0"))
+                    {
+                        <a class="btn btn-ghost" href="/Users">Utilizadores</a>
+                    }
+                    else if (User.IsInRole("2"))
+                    {
+                        <a class="btn btn-ghost" href="/Users">Candidatos</a>
+                    }
                     <a class="btn btn-ghost" href="/Users/Profile">Perfil</a>
                     <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                         @Html.AntiForgeryToken()

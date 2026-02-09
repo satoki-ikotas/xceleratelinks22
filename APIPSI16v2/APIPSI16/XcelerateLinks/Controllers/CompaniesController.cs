@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using APIPSI16.Models;
@@ -26,7 +27,13 @@ namespace XcelerateLinks.Mvc.Controllers
             }
 
             var companies = await resp.Content.ReadFromJsonAsync<IEnumerable<Company>>();
-            return View(companies ?? Array.Empty<Company>());
+            var model = companies ?? Array.Empty<Company>();
+            if (User.IsInRole("0"))
+            {
+                return View("IndexAdmin", model);
+            }
+
+            return View(model);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -44,10 +51,12 @@ namespace XcelerateLinks.Mvc.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "0")]
         public IActionResult Create() => View(new Company());
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "0")]
         public async Task<IActionResult> Create(Company model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -64,6 +73,7 @@ namespace XcelerateLinks.Mvc.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "0")]
         public async Task<IActionResult> Edit(int id)
         {
             var client = CreateAuthorizedClient();
@@ -80,6 +90,7 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "0")]
         public async Task<IActionResult> Edit(int id, Company model)
         {
             if (id != model.CompanyId) return RedirectToAction(nameof(Index));
@@ -97,6 +108,7 @@ namespace XcelerateLinks.Mvc.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "0")]
         public async Task<IActionResult> Delete(int id)
         {
             var client = CreateAuthorizedClient();
@@ -113,6 +125,7 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "0")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var client = CreateAuthorizedClient();

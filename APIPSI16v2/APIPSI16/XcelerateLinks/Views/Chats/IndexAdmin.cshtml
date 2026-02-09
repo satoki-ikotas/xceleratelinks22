@@ -1,9 +1,9 @@
 @model IEnumerable<Chat>
 @{
-    ViewData["Title"] = "Conversas";
+    ViewData["Title"] = "Conversas (Admin)";
 }
 
-<h2 class="mb-3">Conversas</h2>
+<h2 class="mb-3">Conversas (Admin)</h2>
 
 @if (ViewBag.Error != null)
 {
@@ -32,6 +32,7 @@
             <td>@chat.CreatedByUserId</td>
             <td class="text-end">
                 <a asp-action="Details" asp-route-id="@chat.ChatId" class="btn btn-sm btn-outline-secondary">Detalhes</a>
+                <a asp-action="Delete" asp-route-id="@chat.ChatId" class="btn btn-sm btn-outline-danger">Eliminar</a>
             </td>
         </tr>
     }
