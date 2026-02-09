@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using APIPSI16.Models;
+using XcelerateLinks.Models;
 
 namespace XcelerateLinks.Mvc.Controllers
 {
@@ -28,7 +29,7 @@ namespace XcelerateLinks.Mvc.Controllers
 
             var opportunities = await resp.Content.ReadFromJsonAsync<IEnumerable<Opportunity>>();
             var model = opportunities ?? Array.Empty<Opportunity>();
-            if (User.IsInRole("0"))
+            if (User.IsInRole(AppRoles.Admin))
             {
                 return View("IndexAdmin", model);
             }
@@ -51,7 +52,7 @@ namespace XcelerateLinks.Mvc.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public IActionResult Create()
         {
             var model = new Opportunity();
@@ -65,7 +66,7 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public async Task<IActionResult> Create(Opportunity model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -84,7 +85,7 @@ namespace XcelerateLinks.Mvc.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public async Task<IActionResult> Edit(int id)
         {
             var client = CreateAuthorizedClient();
@@ -101,7 +102,7 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public async Task<IActionResult> Edit(int id, Opportunity model)
         {
             if (id != model.Id) return RedirectToAction(nameof(Index));
@@ -119,7 +120,7 @@ namespace XcelerateLinks.Mvc.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             var client = CreateAuthorizedClient();
@@ -136,7 +137,7 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var client = CreateAuthorizedClient();

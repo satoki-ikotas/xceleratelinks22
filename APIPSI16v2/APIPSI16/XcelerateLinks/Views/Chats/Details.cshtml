@@ -17,7 +17,7 @@
 </dl>
 
 <div class="d-flex gap-2">
-    @if (User.IsInRole("0"))
+    @if (User.IsInRole(AppRoles.Admin))
     {
         <a asp-action="Delete" asp-route-id="@Model.ChatId" class="btn btn-outline-danger">Eliminar</a>
     }

@@ -23,7 +23,7 @@
         <span asp-validation-for="CompanyId" class="text-danger"></span>
     </div>
 
-    @if (User.IsInRole("0"))
+    @if (User.IsInRole(AppRoles.Admin))
     {
         <div class="mb-3">
             <label asp-for="CreatorId" class="form-label">Criador (ID)</label>

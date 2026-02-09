@@ -28,7 +28,7 @@
         <span asp-validation-for="Application.OpportunityId" class="text-danger"></span>
     </div>
 
-    @if (User.IsInRole("0"))
+    @if (User.IsInRole(AppRoles.Admin))
     {
         <div class="mb-3">
             <label asp-for="Application.UserId" class="form-label">Utilizador (ID)</label>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using APIPSI16.Models;
+using XcelerateLinks.Models;
 using XcelerateLinks.Models.ViewModels;
 
 namespace XcelerateLinks.Mvc.Controllers
@@ -28,7 +29,7 @@ namespace XcelerateLinks.Mvc.Controllers
             }
 
             var applications = await resp.Content.ReadFromJsonAsync<IEnumerable<Application>>() ?? Array.Empty<Application>();
-            if (User.IsInRole("0"))
+            if (User.IsInRole(AppRoles.Admin))
             {
                 return View("IndexAdmin", applications);
             }
@@ -86,7 +87,7 @@ namespace XcelerateLinks.Mvc.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             var client = CreateAuthorizedClient();
@@ -103,7 +104,7 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var client = CreateAuthorizedClient();

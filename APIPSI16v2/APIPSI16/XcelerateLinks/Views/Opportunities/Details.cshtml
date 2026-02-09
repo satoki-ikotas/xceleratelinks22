@@ -18,7 +18,7 @@
 
 <div class="d-flex gap-2">
     <a asp-controller="Applications" asp-action="Create" asp-route-opportunityId="@Model.Id" class="btn btn-primary">Candidatar</a>
-    @if (User.IsInRole("0"))
+    @if (User.IsInRole(AppRoles.Admin))
     {
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Editar</a>
         <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Eliminar</a>

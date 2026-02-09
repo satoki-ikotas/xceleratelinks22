@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using APIPSI16.Models;
+using XcelerateLinks.Models;
 using XcelerateLinks.Models.ViewModels;
 
 namespace XcelerateLinks.Mvc.Controllers
@@ -19,13 +20,13 @@ namespace XcelerateLinks.Mvc.Controllers
 
         public async Task<IActionResult> Index(int? jobPreference = null, int? nationality = null)
         {
-            if (User.IsInRole("0"))
+            if (User.IsInRole(AppRoles.Admin))
             {
                 var adminModel = await LoadUsersAsync(jobPreference, nationality, allowEmpty: true);
                 return View("IndexAdmin", adminModel);
             }
 
-            if (User.IsInRole("2"))
+            if (User.IsInRole(AppRoles.Employer))
             {
                 if (!jobPreference.HasValue && !nationality.HasValue)
                 {
@@ -95,7 +96,7 @@ namespace XcelerateLinks.Mvc.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             var client = CreateAuthorizedClient();
@@ -112,7 +113,7 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "0")]
+        [Authorize(Roles = AppRoles.Admin)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var client = CreateAuthorizedClient();

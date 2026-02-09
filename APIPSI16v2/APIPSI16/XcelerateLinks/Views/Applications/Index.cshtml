@@ -12,7 +12,7 @@
 
 <div class="mb-3 d-flex gap-2">
     <a asp-action="Create" class="btn btn-primary">Nova candidatura</a>
-    @if (User.IsInRole("0"))
+    @if (User.IsInRole(AppRoles.Admin))
     {
         <span class="text-muted align-self-center">Admin vê todas as candidaturas.</span>
     }
@@ -34,7 +34,7 @@
             <td>@(item.Opportunity?.Title ?? item.OpportunityId?.ToString() ?? "-")</td>
             <td class="text-end">
                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Detalhes</a>
-                @if (User.IsInRole("0"))
+                @if (User.IsInRole(AppRoles.Admin))
                 {
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
                 }
