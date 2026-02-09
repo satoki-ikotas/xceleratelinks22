@@ -96,10 +96,10 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpGet]
         [Authorize(Roles = "0")]
-        public async Task<IActionResult> Delete([FromRoute(Name = "id")] int userId)
+        public async Task<IActionResult> Delete(int id)
         {
             var client = CreateAuthorizedClient();
-            var resp = await client.GetAsync($"api/users/{userId}");
+            var resp = await client.GetAsync($"api/users/{id}");
             if (!resp.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
@@ -113,13 +113,13 @@ namespace XcelerateLinks.Mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "0")]
-        public async Task<IActionResult> DeleteConfirmed([FromRoute(Name = "id")] int userId)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var client = CreateAuthorizedClient();
-            var resp = await client.DeleteAsync($"api/users/{userId}");
+            var resp = await client.DeleteAsync($"api/users/{id}");
             if (!resp.IsSuccessStatusCode)
             {
-                return RedirectToAction(nameof(Delete), new { id = userId });
+                return RedirectToAction(nameof(Delete), new { id });
             }
 
             return RedirectToAction(nameof(Index));

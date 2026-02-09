@@ -1,8 +1,7 @@
 @model User
 @{
     ViewData["Title"] = "Editar utilizador";
-    var adminRole = "0";
-    var isAdmin = User.IsInRole(adminRole);
+    var isAdmin = User.IsInRole(AppRoles.Admin);
 }
 
 <h2 class="mb-3">Editar utilizador</h2>
