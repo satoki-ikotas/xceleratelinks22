@@ -1,0 +1,81 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Xcelerate Links</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />  <!-- new file -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Head", required: false)
+</head>
+<body class="site-body">
+    <header class="site-header">
+        <div class="container-fluid header-inner">
+            <div class="header-left">
+                <a class="brand" href="/">
+                    <span class="brand-dot"></span>
+                    <span class="brand-text">Xcelerate Links</span>
+                </a>
+            </div>
+
+            <div class="header-center">
+                <div class="search-wrap">
+                    <input class="search-input" type="search" placeholder="Pesquisar funções, empresas, skills..." />
+                    <button class="btn search-btn">🔍</button>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <button class="btn btn-filter">Filtrar</button>
+                <button id="themeToggle" class="btn btn-ghost">Dark</button>
+                <a class="btn btn-ghost" href="/Account/Login">Entrar</a>
+                <a class="btn btn-cta" href="/Account/Register">Criar conta</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; @DateTime.UtcNow.Year - Xcelerate Links
+        </div>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+
+
+<script>
+    // Theme toggle logic
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+        body.classList.toggle('dark-theme', theme === 'dark');
+        body.classList.toggle('light-theme', theme === 'light');
+        themeToggle.textContent = theme === 'dark' ? 'Light' : 'Dark';
+        localStorage.setItem('siteTheme', theme);
+    }
+
+    // On load, set theme from localStorage
+    const savedTheme = localStorage.getItem('siteTheme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
+        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+</script>

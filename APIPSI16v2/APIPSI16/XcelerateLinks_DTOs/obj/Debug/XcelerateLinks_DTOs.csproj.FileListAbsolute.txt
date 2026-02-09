@@ -1,0 +1,2 @@
+C:\Users\I230102\Downloads\APIPSI16\APIPSI16\APIPSI16\XcelerateLinks_DTOs\obj\Debug\XcelerateLinks_DTOs.csproj.AssemblyReference.cache
+C:\Users\I230102\Downloads\APIPSI16\APIPSI16\APIPSI16\XcelerateLinks_DTOs\obj\Debug\XcelerateLinks_DTOs.csproj.CoreCompileInputs.cache
