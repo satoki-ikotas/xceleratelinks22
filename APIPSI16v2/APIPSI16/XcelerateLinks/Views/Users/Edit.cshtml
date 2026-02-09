@@ -1,4 +1,5 @@
 @model User
+@using XcelerateLinks.Models
 @{
     ViewData["Title"] = "Editar utilizador";
     var isAdmin = User.IsInRole(AppRoles.Admin);
