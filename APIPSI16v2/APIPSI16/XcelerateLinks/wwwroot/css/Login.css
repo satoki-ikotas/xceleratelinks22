@@ -185,25 +185,6 @@
     }
 
 
-.login-btn {
-    background: linear-gradient(180deg,#ff7a1a,#ff6a00);
-    border: none;
-    color: white;
-    width: 100%;
-    padding: .65rem;
-    border-radius: 10px;
-    font-weight: 600;
-    margin-top: .5rem;
-}
-
-.secondary-link {
-    display: block;
-    text-align: center;
-    margin-top: .8rem;
-    color: #bbb;
-    font-size: .95rem;
-}
-
 .form-note {
     color: #bdbdbd;
     font-size: .9rem;

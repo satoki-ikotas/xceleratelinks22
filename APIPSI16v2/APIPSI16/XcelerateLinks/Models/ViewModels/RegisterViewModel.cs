@@ -6,7 +6,7 @@ namespace XcelerateLinks.Models.ViewModels
     {
         [Required]
         [Display(Name = "Nome")]
-        [StringLength(100, ErrorMessage = "O nome deve ter até 100 caracteres.")]
+        [StringLength(100, ErrorMessage = "O nome deve ter atÃ© 100 caracteres.")]
         public string Name { get; set; } = "";
 
         [Required]
@@ -16,7 +16,7 @@ namespace XcelerateLinks.Models.ViewModels
 
         [Required]
         [Display(Name = "Utilizador")]
-        [StringLength(50, ErrorMessage = "O nome de utilizador deve ter até 50 caracteres.")]
+        [StringLength(50, ErrorMessage = "O nome de utilizador deve ter atÃ© 50 caracteres.")]
         public string Username { get; set; } = "";
 
         [Display(Name = "Telefone")]
@@ -26,18 +26,18 @@ namespace XcelerateLinks.Models.ViewModels
         [Display(Name = "Nacionalidade")]
         public int? Nationality { get; set; }
 
-        [Display(Name = "Preferência de emprego")]
+        [Display(Name = "PreferÃªncia de emprego")]
         public int? JobPreference { get; set; }
 
         [Display(Name = "Bio do perfil")]
-        [StringLength(500, ErrorMessage = "A bio deve ter até 500 caracteres.")]
+        [StringLength(500, ErrorMessage = "A bio deve ter atÃ© 500 caracteres.")]
         public string? Profile_Bio { get; set; }
 
         [Display(Name = "Data de nascimento")]
         [DataType(DataType.Date)]
         public DateTime? DoB { get; set; }
 
-        [Display(Name = "Função")]
+        [Display(Name = "FunÃ§Ã£o")]
         public int? Role { get; set; }
 
         [Required]
@@ -49,7 +49,7 @@ namespace XcelerateLinks.Models.ViewModels
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar senha")]
-        [Compare("Password", ErrorMessage = "As senhas não coincidem.")]
+        [Compare("Password", ErrorMessage = "As senhas nÃ£o coincidem.")]
         public string ConfirmPassword { get; set; } = "";
     }
 }
