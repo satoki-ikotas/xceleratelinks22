@@ -1,0 +1,45 @@
+@model IEnumerable<Application>
+@{
+    ViewData["Title"] = "Candidaturas";
+}
+
+<h2 class="mb-3">Candidaturas</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-warning">@ViewBag.Error</div>
+}
+
+<div class="mb-3 d-flex gap-2">
+    <a asp-action="Create" class="btn btn-primary">Nova candidatura</a>
+    @if (User.IsInRole("0"))
+    {
+        <span class="text-muted align-self-center">Admin vê todas as candidaturas.</span>
+    }
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Oportunidade</th>
+            <th class="text-end">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@(item.Opportunity?.Title ?? item.OpportunityId?.ToString() ?? "-")</td>
+            <td class="text-end">
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Detalhes</a>
+                @if (User.IsInRole("0"))
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
