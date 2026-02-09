@@ -35,8 +35,24 @@
             <div class="header-right">
                 <button class="btn btn-filter">Filtrar</button>
                 <button id="themeToggle" class="btn btn-ghost">Dark</button>
-                <a class="btn btn-ghost" href="/Account/Login">Entrar</a>
-                <a class="btn btn-cta" href="/Account/Register">Criar conta</a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a class="btn btn-ghost" href="/Opportunities">Oportunidades</a>
+                    <a class="btn btn-ghost" href="/Applications">Candidaturas</a>
+                    <a class="btn btn-ghost" href="/Companies">Empresas</a>
+                    <a class="btn btn-ghost" href="/Chats">Conversas</a>
+                    <a class="btn btn-ghost" href="/Users">Utilizadores</a>
+                    <a class="btn btn-ghost" href="/Users/Profile">Perfil</a>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-cta">Sair (@User.Identity.Name)</button>
+                    </form>
+                }
+                else
+                {
+                    <a class="btn btn-ghost" href="/Account/Login">Entrar</a>
+                    <a class="btn btn-cta" href="/Account/Register">Criar conta</a>
+                }
             </div>
         </div>
     </header>

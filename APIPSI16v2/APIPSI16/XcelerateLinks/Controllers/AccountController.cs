@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using XcelerateLinks.Models.ViewModels;
 
@@ -24,7 +25,14 @@ namespace XcelerateLinks.Mvc.Controllers
 
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
-            => View(new LoginViewModel { ReturnUrl = returnUrl });
+        {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -61,7 +69,26 @@ namespace XcelerateLinks.Mvc.Controllers
                     Expires = auth.ExpiresAt.ToUniversalTime()
                 });
 
-                var claims = new List<Claim> { new Claim(ClaimTypes.Name, model.Username ?? string.Empty) };
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var handler = new JwtSecurityTokenHandler();
+                var jwt = handler.ReadJwtToken(auth.Token);
+                var name = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name || c.Type == "unique_name" || c.Type == "name")?.Value
+                           ?? model.Username
+                           ?? string.Empty;
+                var userId = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier || c.Type == "sub")?.Value;
+                var role = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role || c.Type == "role")?.Value;
+
+                var claims = new List<Claim> { new Claim(ClaimTypes.Name, name) };
+                if (!string.IsNullOrWhiteSpace(userId))
+                {
+                    claims.Add(new Claim(ClaimTypes.NameIdentifier, userId));
+                }
+
+                if (!string.IsNullOrWhiteSpace(role))
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
