@@ -105,7 +105,7 @@ namespace XcelerateLinks.Mvc.Controllers
                 PhoneNumber = model.PhoneNumber,
                 Nationality = model.Nationality,
                 JobPreference = model.JobPreference,
-                Profile_Bio = model.Profile_Bio,
+                ProfileBio = model.ProfileBio,
                 DoB = model.DoB,
                 Role = model.Role,
                 Password = model.Password
