@@ -1,0 +1,30 @@
+@model User
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+<h2 class="mb-3">O meu perfil</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-warning">@ViewBag.Error</div>
+}
+
+<dl class="row">
+    <dt class="col-sm-3">Nome</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.Email</dd>
+
+    <dt class="col-sm-3">Telefone</dt>
+    <dd class="col-sm-9">@Model.PhoneNumber</dd>
+
+    <dt class="col-sm-3">Nacionalidade</dt>
+    <dd class="col-sm-9">@Model.Nationality</dd>
+
+    <dt class="col-sm-3">Preferência</dt>
+    <dd class="col-sm-9">@Model.JobPreference</dd>
+</dl>
+
+<a asp-action="Edit" asp-route-id="@Model.UserId" class="btn btn-primary">Editar perfil</a>

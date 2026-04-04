@@ -1,0 +1,36 @@
+@model IEnumerable<Opportunity>
+@{
+    ViewData["Title"] = "Oportunidades";
+}
+
+<h2 class="mb-3">Oportunidades</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-warning">@ViewBag.Error</div>
+}
+
+<p class="text-muted">Explore oportunidades e candidate-se às que fazem sentido para o seu perfil.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Empresa</th>
+            <th class="text-end">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Title</td>
+            <td>@(item.Company?.Name ?? item.CompanyId?.ToString() ?? "-")</td>
+            <td class="text-end">
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Detalhes</a>
+                <a asp-controller="Applications" asp-action="Create" asp-route-opportunityId="@item.Id" class="btn btn-sm btn-primary">Candidatar</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

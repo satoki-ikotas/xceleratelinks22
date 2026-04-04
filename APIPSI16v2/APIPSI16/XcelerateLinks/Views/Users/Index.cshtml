@@ -1,0 +1,47 @@
+@model UserFilterViewModel
+@{
+    ViewData["Title"] = "Candidatos";
+}
+
+<h2 class="mb-3">Candidatos</h2>
+<p class="text-muted">Filtre candidatos por preferência e nacionalidade.</p>
+
+<form asp-action="Index" method="get" class="row g-3 align-items-end mb-4">
+    <div class="col-md-4">
+        <label asp-for="JobPreference" class="form-label">Preferência de trabalho (ID)</label>
+        <input asp-for="JobPreference" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Nationality" class="form-label">Nacionalidade (ID)</label>
+        <input asp-for="Nationality" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Limpar</a>
+    </div>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert alert-warning">@Model.ErrorMessage</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Nacionalidade</th>
+            <th>Preferência</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model.Users)
+    {
+        <tr>
+            <td>@user.Name</td>
+            <td>@(user.Nationality?.ToString() ?? "-")</td>
+            <td>@(user.JobPreference?.ToString() ?? "-")</td>
+        </tr>
+    }
+    </tbody>
+</table>

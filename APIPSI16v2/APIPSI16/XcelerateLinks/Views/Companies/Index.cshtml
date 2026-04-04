@@ -1,0 +1,37 @@
+@model IEnumerable<Company>
+@{
+    ViewData["Title"] = "Empresas";
+}
+
+<h2 class="mb-3">Empresas</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-warning">@ViewBag.Error</div>
+}
+
+<p class="text-muted">Veja as empresas disponíveis e as oportunidades associadas.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Indústria</th>
+            <th>Localização</th>
+            <th class="text-end">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@(item.Industry ?? "-")</td>
+            <td>@(item.Location ?? "-")</td>
+            <td class="text-end">
+                <a asp-action="Details" asp-route-id="@item.CompanyId" class="btn btn-sm btn-outline-secondary">Detalhes</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
